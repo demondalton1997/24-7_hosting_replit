@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2026-02-11T00:00:00Z",
+  "captainPresets": [
+    "Gear 5 Luffy",
+    "Hybrid Kaido",
+    "Roger & Whitebeard",
+    "Yamato"
+  ],
+  "questMultipliers": {
+    "raid": 1.0,
+    "coliseum": 1.1,
+    "kizuna": 1.25,
+    "tm": 1.2,
+    "gp": 1.15
+  }
+}
