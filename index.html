@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPTC Parallel Seas Simulator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="topbar">
+      <div>
+        <h1>One Piece Treasure Cruise: Parallel Seas Simulator</h1>
+        <p class="subtitle">Build crews, simulate quests, and test strategies in a harmless sandbox.</p>
+      </div>
+      <button id="theme-toggle" class="btn secondary" aria-live="polite">Theme: light</button>
+    </header>
+
+    <main id="main-content" class="layout">
+      <nav class="panel nav-panel" aria-label="Simulator navigation">
+        <h2>Simulator Tracks</h2>
+        <ol>
+          <li><a href="#crew-step">Crew Builder</a></li>
+          <li><a href="#boost-step">Boosts & Effects</a></li>
+          <li><a href="#quest-step">Quest Settings</a></li>
+          <li><a href="#run-step">Simulation Run</a></li>
+        </ol>
+      </nav>
+
+      <section class="panel content-panel">
+        <h2>Strategy wizard</h2>
+        <p class="small-muted">This is a simulation/planning tool only. No game injection/modding features are included.</p>
+
+        <div class="progress-wrap" aria-label="Progress">
+          <label for="progress">Planning completion</label>
+          <progress id="progress" max="4" value="0"></progress>
+          <span id="progress-text">0/4 complete</span>
+        </div>
+
+        <div class="accordion-group">
+          <details id="crew-step" open>
+            <summary>Crew Builder</summary>
+            <label>Captain <input id="captain" type="text" placeholder="e.g. Gear 5 Luffy" /></label>
+            <label>Friend Captain <input id="friendCaptain" type="text" placeholder="e.g. Hybrid Kaido" /></label>
+            <label>Core Units (comma-separated)
+              <textarea id="units" rows="3" placeholder="Zoro, Nami, Law, Sanji"></textarea>
+            </label>
+            <label class="checkline"><input type="checkbox" data-step="crew" /> Mark complete</label>
+          </details>
+
+          <details id="boost-step">
+            <summary>Boosts & Effects</summary>
+            <label>ATK Boost (%) <input id="atkBoost" type="number" min="0" max="500" value="100" /></label>
+            <label>Orb Boost (%) <input id="orbBoost" type="number" min="0" max="500" value="100" /></label>
+            <label>Chain Boost <input id="chainBoost" type="number" min="0" max="5" step="0.1" value="1.1" /></label>
+            <label class="checkline"><input type="checkbox" data-step="boost" /> Mark complete</label>
+          </details>
+
+          <details id="quest-step">
+            <summary>Quest Settings</summary>
+            <label>Enemy HP <input id="enemyHp" type="number" min="1" value="5000000" /></label>
+            <label>Quest Type
+              <select id="questType">
+                <option value="raid">Raid</option>
+                <option value="coliseum">Coliseum</option>
+                <option value="kizuna">Kizuna</option>
+                <option value="tm">Treasure Map</option>
+              </select>
+            </label>
+            <label class="checkline"><input type="checkbox" data-step="quest" /> Mark complete</label>
+          </details>
+
+          <details id="run-step">
+            <summary>Simulation Run</summary>
+            <p>Run a local estimate based on your selected values.</p>
+            <div class="button-row controls">
+              <button id="simulate-btn" class="btn">Run Simulation</button>
+              <button id="save-btn" class="btn">Save Plan</button>
+              <button id="export-btn" class="btn">Export JSON</button>
+              <button id="reset-btn" class="btn danger">Reset</button>
+            </div>
+            <label class="checkline"><input type="checkbox" data-step="run" /> Mark complete</label>
+          </details>
+        </div>
+      </section>
+
+      <aside class="panel status-panel" aria-live="polite">
+        <h2>Simulation Output</h2>
+        <p><span class="label">Estimated Damage:</span> <span id="estimatedDamage">—</span></p>
+        <p><span class="label">Enemy HP:</span> <span id="statusEnemyHp">—</span></p>
+        <p><span class="label">Result:</span> <span id="resultBadge" class="badge warn">NOT RUN</span></p>
+        <p><span class="label">Last Run:</span> <span id="lastRun">Never</span></p>
+      </aside>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
