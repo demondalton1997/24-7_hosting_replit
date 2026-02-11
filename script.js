@@ -25,6 +25,10 @@ const els = {
   chainBoost: document.getElementById('chainBoost'),
   enemyHp: document.getElementById('enemyHp'),
   questType: document.getElementById('questType'),
+  luckyCrit: document.getElementById('luckyCrit'),
+  defDown: document.getElementById('defDown'),
+  stageHazard: document.getElementById('stageHazard'),
+  weatherBonus: document.getElementById('weatherBonus'),
   manifestUrl: document.getElementById('manifestUrl'),
   autoUpdate: document.getElementById('auto-update'),
   progress: document.getElementById('progress'),
@@ -32,6 +36,7 @@ const els = {
   estimatedDamage: document.getElementById('estimatedDamage'),
   statusEnemyHp: document.getElementById('statusEnemyHp'),
   statusContent: document.getElementById('statusContent'),
+  modifierImpact: document.getElementById('modifierImpact'),
   contentVersion: document.getElementById('contentVersion'),
   updateMessage: document.getElementById('updateMessage'),
   historyList: document.getElementById('historyList'),
@@ -73,7 +78,7 @@ function renderHistory() {
   }
 
   els.historyList.innerHTML = history
-    .map((item) => `<li><strong>${item.result}</strong> · Dmg ${item.damage.toLocaleString()} / HP ${item.enemyHp.toLocaleString()} · ${item.time}</li>`)
+    .map((item) => `<li><strong>${item.result}</strong> · Dmg ${item.damage.toLocaleString()} / HP ${item.enemyHp.toLocaleString()} · Impact ${item.modifier} · ${item.time}</li>`)
     .join('');
 }
 
@@ -109,6 +114,34 @@ function applyContentPackToUI() {
   els.captainPreset.innerHTML = options.join('');
 }
 
+function getModifierFactor() {
+  const luckyCrit = Number(els.luckyCrit.value || 0);
+  const defDown = Number(els.defDown.value || 0);
+
+  const hazardMap = {
+    none: 1,
+    fog: 0.92,
+    storm: 0.85,
+    blessing: 1.1
+  };
+
+  const weatherMap = {
+    neutral: 1,
+    sunny: 1.07,
+    rainy: 1.04,
+    eclipse: 1.12
+  };
+
+  const critFactor = 1 + (luckyCrit / 100) * 0.5;
+  const defDownFactor = 1 + defDown / 100;
+  const hazardFactor = hazardMap[els.stageHazard.value] || 1;
+  const weatherFactor = weatherMap[els.weatherBonus.value] || 1;
+
+  const totalFactor = critFactor * defDownFactor * hazardFactor * weatherFactor;
+  els.modifierImpact.textContent = `x${totalFactor.toFixed(2)}`;
+  return totalFactor;
+}
+
 function getData() {
   return {
     captain: els.captain.value.trim(),
@@ -119,6 +152,10 @@ function getData() {
     chainBoost: Number(els.chainBoost.value || 1),
     enemyHp: Number(els.enemyHp.value || 1),
     questType: els.questType.value,
+    luckyCrit: Number(els.luckyCrit.value || 0),
+    defDown: Number(els.defDown.value || 0),
+    stageHazard: els.stageHazard.value,
+    weatherBonus: els.weatherBonus.value,
     manifestUrl: els.manifestUrl.value.trim(),
     autoUpdate: els.autoUpdate.checked,
     completedSteps: els.checkboxes.filter((b) => b.checked).map((b) => b.dataset.step)
@@ -134,6 +171,10 @@ function setData(data = {}) {
   els.chainBoost.value = data.chainBoost ?? 1.1;
   els.enemyHp.value = data.enemyHp ?? 5000000;
   els.questType.value = data.questType || 'raid';
+  els.luckyCrit.value = data.luckyCrit ?? 15;
+  els.defDown.value = data.defDown ?? 20;
+  els.stageHazard.value = data.stageHazard || 'none';
+  els.weatherBonus.value = data.weatherBonus || 'neutral';
   els.manifestUrl.value = data.manifestUrl || './data.json';
   els.autoUpdate.checked = Boolean(data.autoUpdate);
   els.checkboxes.forEach((b) => {
@@ -147,7 +188,7 @@ function setData(data = {}) {
 function updateProgress() {
   const complete = els.checkboxes.filter((b) => b.checked).length;
   els.progress.value = complete;
-  els.progressText.textContent = `${complete}/5 complete`;
+  els.progressText.textContent = `${complete}/6 complete`;
 }
 
 function simulate() {
@@ -155,7 +196,8 @@ function simulate() {
   const unitCount = d.units ? d.units.split(',').map((x) => x.trim()).filter(Boolean).length : 0;
   const base = 150000 * (2 + unitCount);
   const typeFactor = contentPack.questMultipliers[d.questType] || 1;
-  const total = Math.round(base * (1 + d.atkBoost / 100) * (1 + d.orbBoost / 100) * d.chainBoost * typeFactor);
+  const modifierFactor = getModifierFactor();
+  const total = Math.round(base * (1 + d.atkBoost / 100) * (1 + d.orbBoost / 100) * d.chainBoost * typeFactor * modifierFactor);
 
   els.estimatedDamage.textContent = total.toLocaleString();
   els.statusEnemyHp.textContent = d.enemyHp.toLocaleString();
@@ -171,12 +213,14 @@ function simulate() {
     result,
     damage: total,
     enemyHp: d.enemyHp,
+    modifier: `x${modifierFactor.toFixed(2)}`,
     time: now
   });
 }
 
 function renderStatus() {
   els.statusEnemyHp.textContent = Number(els.enemyHp.value || 0).toLocaleString();
+  getModifierFactor();
 }
 
 function savePlan() {
@@ -310,6 +354,10 @@ els.themeToggle.addEventListener('click', () => {
 });
 els.checkboxes.forEach((b) => b.addEventListener('change', updateProgress));
 els.enemyHp.addEventListener('input', renderStatus);
+[els.luckyCrit, els.defDown, els.stageHazard, els.weatherBonus].forEach((el) => {
+  el.addEventListener('input', renderStatus);
+  el.addEventListener('change', renderStatus);
+});
 
 const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
 setTheme(savedTheme);

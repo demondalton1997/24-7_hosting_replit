@@ -93,13 +93,14 @@ A complete responsive web tool is now included in this repo:
 ### What it does
 - Crew builder for captain/friend/units.
 - Boost + quest input controls.
+- Simulation Modifier Lab for what-if scenario tuning (crit chance, enemy DEF down, hazards, weather bonuses).
 - Local simulation run with estimated damage result.
 - OTA-style content pack update flow (manifest check/apply) for presets and multipliers.
 - Optional auto-check timer for OTA manifests (every 60 seconds).
 - Save/load strategy plans with `localStorage`.
 - Export plan as JSON.
 - Import saved plan JSON files back into the simulator.
-- Recent simulation history (latest 10 runs) saved locally.
+- Recent simulation history (latest 10 runs) saved locally with modifier impact snapshots.
 - Responsive mobile/tablet/desktop layout.
 - Light/dark mode and keyboard-friendly navigation.
 

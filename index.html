@@ -25,6 +25,7 @@
           <li><a href="#boost-step">Boosts & Effects</a></li>
           <li><a href="#quest-step">Quest Settings</a></li>
           <li><a href="#run-step">Simulation Run</a></li>
+          <li><a href="#mods-step">Simulation Modifier Lab</a></li>
           <li><a href="#ota-step">OTA Content Updates</a></li>
         </ol>
       </nav>
@@ -35,8 +36,8 @@
 
         <div class="progress-wrap" aria-label="Progress">
           <label for="progress">Planning completion</label>
-          <progress id="progress" max="5" value="0"></progress>
-          <span id="progress-text">0/5 complete</span>
+          <progress id="progress" max="6" value="0"></progress>
+          <span id="progress-text">0/6 complete</span>
         </div>
 
         <div class="accordion-group">
@@ -92,6 +93,31 @@
           </details>
         
 
+
+          <details id="mods-step">
+            <summary>Simulation Modifier Lab</summary>
+            <p>Build custom what-if scenarios for your sandbox runs.</p>
+            <label>Lucky Crit Chance (%) <input id="luckyCrit" type="number" min="0" max="100" value="15" /></label>
+            <label>Enemy DEF Down (%) <input id="defDown" type="number" min="0" max="100" value="20" /></label>
+            <label>Stage Hazard
+              <select id="stageHazard">
+                <option value="none">None</option>
+                <option value="fog">Fog (-8%)</option>
+                <option value="storm">Storm (-15%)</option>
+                <option value="blessing">Blessing (+10%)</option>
+              </select>
+            </label>
+            <label>Weather Bonus
+              <select id="weatherBonus">
+                <option value="neutral">Neutral</option>
+                <option value="sunny">Sunny (+7%)</option>
+                <option value="rainy">Rainy (+4%)</option>
+                <option value="eclipse">Eclipse (+12%)</option>
+              </select>
+            </label>
+            <label class="checkline"><input type="checkbox" data-step="mods" /> Mark complete</label>
+          </details>
+
           <details id="ota-step">
             <summary>OTA Content Updates</summary>
             <p>Refresh simulator content packs (presets + multipliers) from a manifest source.</p>
@@ -125,6 +151,7 @@
         <p><span class="label">Result:</span> <span id="resultBadge" class="badge warn">NOT RUN</span></p>
         <p><span class="label">Last Run:</span> <span id="lastRun">Never</span></p>
         <p><span class="label">Content Pack:</span> <span id="statusContent">builtin</span></p>
+        <p><span class="label">Modifier Impact:</span> <span id="modifierImpact">x1.00</span></p>
       </aside>
     </main>
 
